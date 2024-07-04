@@ -1,41 +1,42 @@
-
-/*this file contains the server-side code,
- which sets up the Express server
-and handles API request.*/
-
-
-
+// Import necessary modules
 const express = require('express');
 const axios = require('axios');
-const path = require('path');
 const app = express();
-const PORT = 3000;
 
-app.use(express.static(path.join(__dirname))); //serve static files from root directory
-app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
+// Define API key and URL as constants
+const RAPIDAPI_KEY = '652be5a739msh04db7fc5da19691p10047cjsn7226f46be02e';
+const TRANSLATION_URL = 'https://rapid-translate-multi-traduction.p.rapidapi.com/t';
 
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+// Middleware to parse JSON bodies
+app.use(express.json());
+app.use(express.static('public'));
+
+// Define the port
+const PORT = process.env.PORT || 3000;
+
+// Fetch code to get data
+app.post('/translate', async (req, res) => {
+  const { from, to, q } = req.body;
+  
+  try {
+    const response = await axios({
+      method: 'post',
+      url: TRANSLATION_URL,
+      headers: {
+        'x-rapidapi-key': RAPIDAPI_KEY,
+        'x-rapidapi-host': 'rapid-translate-multi-traduction.p.rapidapi.com',
+        'Content-Type': 'application/json'
+      },
+      data: JSON.stringify({ from, to, q })
+    });
+
+    res.status(200).send(response.data);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
 });
 
-app.post('/fetch-data', async (req, res) => {
-    const query = req.body.query;
-    const options = {
-        method: 'GET',
-        url: `https://wordsapiv1.p.rapidapi.com/words/${query}/synonyms`,
-        headers: {
-            'x-rapidapi-key': '652be5a739msh04db7fc5da19691p10047cjsn7226f46be02e',
-            'x-rapidapi-host': 'wordsapiv1.p.rapidapi.com'
-        }
-    };
-    try {
-        const response = await axios.request(options);
-        res.json(response.data);
-    } catch (error) {
-        res.status(500).json({ error: 'Failed to fetch data' });
-    }
-});
-
+// Start server
 app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });

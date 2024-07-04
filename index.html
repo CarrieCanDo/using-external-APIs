@@ -2,18 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-    
+    <title>Simple Translation Service</title>
 </head>
 <body>
-    <h1>API Data Dashboard</h1>
-    <form id="query-form">
-        <label for="query">Enter a word:</label>
-        <input type="text" id="query" name="query" required>
-        <button type="submit">Fetch Synonyms</button>
-    </form>
-    <div id="result"></div>
-    <script defer src="script.js"></script>
+    <h1>Translation Service</h1>
+    <input type="text" id="from" placeholder="From Language (e.g., 'en')" required>
+    <input type="text" id="to" placeholder="To Language (e.g., 'ar')" required>
+    <textarea id="q" placeholder="Enter text to translate" required></textarea>
+    <button onclick="translateText()">Translate</button>
+
+    <script src="app.js"></script>
 </body>
 </html>
+
