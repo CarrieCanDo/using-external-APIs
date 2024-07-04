@@ -11,7 +11,7 @@ const path = require('path');
 const app = express();
 const PORT = 3000;
 
-app.use(express.static('public')); // Serve static files from the "public" directory
+app.use(express.static(path.join(__dirname))); //serve static files from root directory
 app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
 
 app.get('/', (req, res) => {
